@@ -16,7 +16,7 @@ db.authenticate()
   const { verifyRoles } = require('./middleware/VerifyToken')
 
 const {register, login, logout, forgotPasswordOTP, resetPasswordOTP} = require('./controller/UserController');
-const {registerAdmin, getUsers} = require('./controller/AdminController');
+const {registerAdmin, getUsers, getTotalCustomers, getAllProduct, getAllTotalProduct, getAllCategory, getTotalCategories} = require('./controller/AdminController');
 const prefix = '/api/v1/';
 // AUTH USER
 app.post(prefix + 'register', register);
@@ -25,9 +25,14 @@ app.delete(prefix + 'logout', logout);
 app.post(prefix + 'forgot-password', forgotPasswordOTP);
 app.post(prefix + 'reset-password', resetPasswordOTP);
 
-// AUTH ADMIN
+// AUTH ADMIN & KEUANGAN
 app.post(prefix + 'register-admin', registerAdmin);
-app.get(prefix + 'all-users',  verifyRoles(['admin']),getUsers);
+app.get(prefix + 'all-users',  verifyRoles(['admin']), getUsers);
+app.get(prefix + 'total-customers',  verifyRoles(['admin', 'keuangan']), getTotalCustomers);
+app.get(prefix + 'all-product',  verifyRoles(['admin', 'keuangan']), getAllProduct);
+app.get(prefix + 'all-total-product',  verifyRoles(['admin', 'keuangan']), getAllTotalProduct);
+app.get(prefix + 'all-categories',  verifyRoles(['admin', 'keuangan']), getAllCategory);
+app.get(prefix + 'total-categories',  verifyRoles(['admin', 'keuangan']), getTotalCategories);
 
 app.get('/', (req, res) => {
   res.send('Ok! Server Running!');
