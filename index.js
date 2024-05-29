@@ -13,10 +13,11 @@ db.authenticate()
   .then(() => console.log('Database connected'))
   .catch((err) => console.log('error'));
 
-  const { verifyRoles } = require('./middleware/VerifyToken')
+const { verifyRoles, verifyUser } = require('./middleware/VerifyToken')
 
-const {register, login, logout, forgotPasswordOTP, resetPasswordOTP} = require('./controller/UserController');
+const {register, login, logout, forgotPasswordOTP, resetPasswordOTP, editUsers} = require('./controller/UserController');
 const {registerAdmin, getUsers, getTotalCustomers, getAllProduct, getAllTotalProduct, getAllCategory, getTotalCategories} = require('./controller/AdminController');
+const { getAvailProduct, getProductById, getProductByCategory } = require('./controller/DashboardController')
 const prefix = '/api/v1/';
 // AUTH USER
 app.post(prefix + 'register', register);
@@ -24,6 +25,7 @@ app.post(prefix + 'login', login);
 app.delete(prefix + 'logout', logout);
 app.post(prefix + 'forgot-password', forgotPasswordOTP);
 app.post(prefix + 'reset-password', resetPasswordOTP);
+app.post(prefix + 'update-user', verifyUser ,editUsers);
 
 // AUTH ADMIN & KEUANGAN
 app.post(prefix + 'register-admin', registerAdmin);
@@ -33,6 +35,11 @@ app.get(prefix + 'all-product',  verifyRoles(['admin', 'keuangan']), getAllProdu
 app.get(prefix + 'all-total-product',  verifyRoles(['admin', 'keuangan']), getAllTotalProduct);
 app.get(prefix + 'all-categories',  verifyRoles(['admin', 'keuangan']), getAllCategory);
 app.get(prefix + 'total-categories',  verifyRoles(['admin', 'keuangan']), getTotalCategories);
+
+// DASHBOARD
+app.get(prefix + 'product', getAvailProduct);
+app.get(prefix + 'product-id/:productId', getProductById);
+app.get(prefix + 'product/:category', getProductByCategory);
 
 app.get('/', (req, res) => {
   res.send('Ok! Server Running!');

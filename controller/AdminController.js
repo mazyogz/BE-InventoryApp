@@ -1,7 +1,5 @@
 const { user, category, product } = require("../models");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
 
 exports.registerAdmin = async (req, res) => {
   const { username, email, phone, password, role } = req.body;

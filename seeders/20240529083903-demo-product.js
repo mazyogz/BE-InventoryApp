@@ -46,6 +46,46 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date()
         },
+        {
+          category: 'Electronics',
+          name: 'Smartphone 2',
+          image: 'https://ik.imagekit.io/96v3ucrbi/IMG-1702391512135_WG26ApKxP.jpg',
+          description: 'HP with 8GB RAM and 512GB storage.',
+          price: 1000,
+          is_deleted: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          category: 'Electronics',
+          name: 'TV 2',
+          image: 'https://ik.imagekit.io/96v3ucrbi/IMG-1702391512135_WG26ApKxP.jpg',
+          description: 'TV kantor',
+          price: 1000,
+          is_deleted: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          category: 'Stationery',
+          name: 'Pulpen 2',
+          image: 'https://ik.imagekit.io/96v3ucrbi/IMG-1702391512135_WG26ApKxP.jpg',
+          description: 'Pen kantor',
+          price: 1000,
+          is_deleted: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          category: 'Stationery',
+          name: 'Buku 2',
+          image: 'https://ik.imagekit.io/96v3ucrbi/IMG-1702391512135_WG26ApKxP.jpg',
+          description: 'Buku kantor',
+          price: 1000,
+          is_deleted: false,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
       ],
       {}
     );
