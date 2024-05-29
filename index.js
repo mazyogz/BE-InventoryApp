@@ -13,12 +13,21 @@ db.authenticate()
   .then(() => console.log('Database connected'))
   .catch((err) => console.log('error'));
 
-const {register, login, logout} = require('./controller/UserController');
+  const { verifyRoles } = require('./middleware/VerifyToken')
+
+const {register, login, logout, forgotPasswordOTP, resetPasswordOTP} = require('./controller/UserController');
+const {registerAdmin, getUsers} = require('./controller/AdminController');
 const prefix = '/api/v1/';
 // AUTH USER
 app.post(prefix + 'register', register);
 app.post(prefix + 'login', login);
 app.delete(prefix + 'logout', logout);
+app.post(prefix + 'forgot-password', forgotPasswordOTP);
+app.post(prefix + 'reset-password', resetPasswordOTP);
+
+// AUTH ADMIN
+app.post(prefix + 'register-admin', registerAdmin);
+app.get(prefix + 'all-users',  verifyRoles(['admin']),getUsers);
 
 app.get('/', (req, res) => {
   res.send('Ok! Server Running!');

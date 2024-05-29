@@ -6,10 +6,10 @@ const nodemailer = require("nodemailer");
 exports.register = async (req, res) => {
   const { username, email, phone, password } = req.body;
 
-  if (email.endsWith('@yopmail.com')) {
+  if (email.endsWith("@yopmail.com")) {
     return res.status(400).json({
       success: false,
-      message: 'use another email',
+      message: "use another email",
     });
   }
 
@@ -49,44 +49,29 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    try {
-    let userData = await user.findOne({
-      where: {
-        email: req.body.email,
-      },
-    });
+  try {
+    const { email, password } = req.body;
 
-    userData = JSON.parse(JSON.stringify(userData));
+    let userData = await user.findOne({ where: { email } });
 
-    if (!userData)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email did not found" });
-    const match = await bcrypt.compare(req.body.password, userData.password);
-    if (!match)
-      return res
-        .status(400)
-        .json({ success: false, message: "Password did not match" });
+    if (!userData) {
+      return res.status(400).json({ success: false, message: "Email not found" });
+    }
 
-    // Token generation
-    const userId = userData.id;
-    const role = userData.role;
-    const username = userData.username;
-    const email = userData.email;
-    const phone = userData.phone;
-    const address = userData.address;
-    const nik = userData.nik;
+    const isMatch = await bcrypt.compare(password, userData.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: "Password did not match" });
+    }
+
+    const { id: userId, role, username, phone, address, nik } = userData;
     const tokenParams = { userId, role, username, email, address, phone };
-    const accessToken = jwt.sign(tokenParams, "access", {
-      expiresIn: "1h",
-    });
+    const accessToken = jwt.sign(tokenParams, "access", { expiresIn: "1h" });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      maxAge: 60 * 60 * 1000,
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
-
-    const expiresInHour = 1; // 1 day expiration for accessToken
 
     const data = {
       userId,
@@ -96,7 +81,7 @@ exports.login = async (req, res) => {
       phone,
       nik,
       accessToken,
-      accessTokenExpiresIn: expiresInHour + " hour(s)",
+      accessTokenExpiresIn: "1 hour",
     };
 
     return res.status(201).json({
@@ -105,15 +90,15 @@ exports.login = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    console.log(error);
-    res.status(404).json({ success: false, message: "Login Failed" });
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Login Failed" });
   }
 };
 
 exports.editUsers = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { username, nama_lengkap, nomor_telepon, alamat } = req.body;
+    const { username, phone, address, nik } = req.body;
 
     const existingUser = await user.findByPk(userId);
     if (!existingUser) {
@@ -124,17 +109,17 @@ exports.editUsers = async (req, res) => {
       });
     }
 
-    if (nama_lengkap) {
-      existingUser.nama_lengkap = nama_lengkap;
-    }
-    if (nomor_telepon) {
-      existingUser.nomor_telepon = nomor_telepon;
-    }
-    if (nomor_telepon) {
+    if (username) {
       existingUser.username = username;
     }
-    if (alamat) {
-      existingUser.alamat = alamat;
+    if (phone) {
+      existingUser.phone = phone;
+    }
+    if (address) {
+      existingUser.username = address;
+    }
+    if (nik) {
+      existingUser.alamat = nik;
     }
 
     await existingUser.save();
@@ -192,13 +177,13 @@ exports.forgotPasswordOTP = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
-        user: "symphonyseatsofficial@gmail.com",
-        pass: "tvrj jgxx ifnf xfaj",
+        user: "yogiprass11@gmail.com",
+        pass: "qmui uqbo pzay gjwe",
       },
     });
 
     const mailOptions = {
-      from: "Symphony Seats Official",
+      from: "Inventory app",
       to: email,
       subject: "Password Reset OTP",
       text:
