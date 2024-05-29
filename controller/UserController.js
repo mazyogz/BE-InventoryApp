@@ -116,7 +116,7 @@ exports.editUsers = async (req, res) => {
       existingUser.phone = phone;
     }
     if (address) {
-      existingUser.username = address;
+      existingUser.address = address;
     }
     if (nik) {
       existingUser.alamat = nik;
@@ -124,10 +124,19 @@ exports.editUsers = async (req, res) => {
 
     await existingUser.save();
 
+    const response = {
+      id: existingUser.id,
+      username: existingUser.username,
+      email: existingUser.email,
+      phone: existingUser.phone,
+      address: existingUser.address,
+      nik: existingUser.nik,
+    };
+
     res.status(200).json({
       success: true,
       message: "Update data successfully",
-      data: existingUser,
+      data: response,
     });
   } catch (error) {
     console.log(error);
