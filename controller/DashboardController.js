@@ -2,7 +2,7 @@ const { category, product } = require("../models");
 
 exports.getAvailProduct = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const limit = 4;
+  const limit = 3;
   const offset = (page - 1) * limit;
 
   try {

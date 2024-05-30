@@ -81,6 +81,7 @@ exports.login = async (req, res) => {
       phone,
       nik,
       accessToken,
+      role,
       accessTokenExpiresIn: "1 hour",
     };
 
