@@ -95,6 +95,11 @@ exports.createOrder = async (req, res) => {
       total: totalPrice
     });
 
+    const deleteCartPromises = selectedCartItems.map(async (item) => {
+      await cart.destroy({ where: { id: item.id, user_id: userData.userId } });
+    });
+    await Promise.all(deleteCartPromises);
+
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
