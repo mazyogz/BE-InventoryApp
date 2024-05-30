@@ -1,5 +1,6 @@
 const { Sequelize, cart, product, order_details, order } = require("../models");
 const { v4: uuidv4 } = require("uuid");
+const midtransClient = require("midtrans-client");
 
 exports.addToCart = async (req, res) => {
   const { product_id } = req.body;
@@ -97,6 +98,7 @@ exports.createOrder = async (req, res) => {
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
+      data:uniqueID
     });
   } catch (error) {
     console.error(error);
@@ -107,3 +109,42 @@ exports.createOrder = async (req, res) => {
     });
   }
 };
+
+exports.createPayment = async (req, res) => {
+  const userData = req.user;
+  const { orderId } = req.params;
+  try {
+    const orderData = await order.findOne({
+      where: {
+        unique_id: orderId,
+      },
+    });
+    const snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: "SB-Mid-server-v4ZJdgQET4My17Ngk-pb6T1g",
+      clientKey: "SB-Mid-client-HV7aOKK1G2a7GXBn",
+    });
+
+    const parameter = {
+      transaction_details: {
+        order_id: orderId,
+        gross_amount: Math.ceil(orderData.dataValues.total),
+      },
+      customer_details: {
+        first_name: userData.nama_lengkap,
+        email: userData.email,
+      },
+    };
+
+    snap.createTransaction(parameter).then((transaction) => {
+      const dataPayment = {
+        response: JSON.stringify(transaction),
+      };
+      const token = transaction.token;
+
+      res.status(200).json({ message: "berhasil", dataPayment, token });
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

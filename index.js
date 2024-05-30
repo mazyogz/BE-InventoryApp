@@ -18,7 +18,7 @@ const { verifyRoles, verifyUser } = require('./middleware/VerifyToken')
 const {register, login, logout, forgotPasswordOTP, resetPasswordOTP, editUsers} = require('./controller/UserController');
 const {registerAdmin, getUsers, getTotalCustomers, getAllProduct, getAllTotalProduct, getAllCategory, getTotalCategories} = require('./controller/AdminController');
 const { getAvailProduct, getProductById, getProductByCategory } = require('./controller/DashboardController')
-const {addToCart, cartData, createOrder} = require('./controller/OrderController')
+const {addToCart, cartData, createOrder, createPayment} = require('./controller/OrderController')
 const prefix = '/api/v1/';
 // AUTH USER
 app.post(prefix + 'register', register);
@@ -46,6 +46,7 @@ app.get(prefix + 'product/:category', getProductByCategory);
 app.post(prefix + 'add-to-cart', verifyUser, addToCart);
 app.get(prefix + 'cart', verifyUser, cartData);
 app.post(prefix + 'create-order', verifyUser, createOrder);
+app.post(prefix + 'payment/:orderId', verifyUser, createPayment);
 
 app.get('/', (req, res) => {
   res.send('Ok! Server Running!');
