@@ -21,6 +21,9 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
+      total: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
