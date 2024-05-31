@@ -43,6 +43,12 @@ exports.cartData = async (req, res) => {
           [Sequelize.Op.gt]: 0,
         },
       },
+      include: [
+        {
+          model: product,
+          attributes: ["name","image","price"],
+        },
+      ],
     });
 
     res.status(201).json({
